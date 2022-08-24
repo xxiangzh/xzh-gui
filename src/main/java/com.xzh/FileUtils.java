@@ -110,94 +110,6 @@ public class FileUtils {
     }
 
     /**
-     * 删除文件夹（并递归删除文件夹下所有文件）
-     *
-     * @param file
-     */
-    public static void deleteDirectory(File file) {
-        if (file.isDirectory()) {
-            // 得到当前的路径
-            String[] childFilePaths = file.list();
-            if (childFilePaths == null) {
-                return;
-            }
-            for (String childFilePath : childFilePaths) {
-                File childFile = new File(file.getAbsolutePath() + File.separator + childFilePath);
-                deleteDirectory(childFile);
-            }
-        }
-        file.delete();
-    }
-
-    /**
-     * 重命名
-     *
-     * @param file
-     * @param newName          新的文件名（不含文件扩展名），为空时用旧文件名
-     * @param newExtensionName 新的文件扩展名（文件格式.后缀），为空时用旧文件扩展名
-     */
-    public static void rename(File file, String newName, String newExtensionName) {
-        // 文件夹路径
-        String parent = file.getParent();
-        // 文件名
-        String fileName = file.getName();
-        // 文件真实名（不含扩展名）
-        String realName = newName != null ? newName : fileName.substring(0, fileName.lastIndexOf("."));
-        // 文件扩展名
-        String extensionName = newExtensionName != null ? newExtensionName : fileName.substring(fileName.lastIndexOf("."));
-        // 路径名 = 文件夹路径 + 新名字 + 文件扩展名
-        String pathname = parent + File.separator + realName + extensionName;
-        // 重命名
-        file.renameTo(new File(pathname));
-    }
-
-    /**
-     * 重命名拼接旧名字
-     *
-     * @param file
-     * @param newName
-     */
-    public static void renameSpliceOldName(File file, String newName) {
-        // 文件夹路径
-        String parent = file.getParent();
-        // 文件名
-        String name = file.getName();
-        // 路径名 = 文件夹路径 + 新名字 + 旧名字（含文件扩展名）
-        String pathname = parent + File.separator + newName + name;
-        // 重命名
-        file.renameTo(new File(pathname));
-    }
-
-    /**
-     * 获取文件夹列表
-     *
-     * @param sourceFolderDirectory 源文件夹目录
-     * @param isAll                 是否获取全部文件，true获取全部，false只获取路径下的文件，不包括路径下子文件夹的文件
-     * @return 返回文件夹列表
-     */
-    public static List<File> getDirectoryList(String sourceFolderDirectory, boolean isAll) {
-        List<File> fileList = new ArrayList<>();
-        File dir = new File(sourceFolderDirectory);
-        // 该文件目录下文件全部放入数组
-        File[] files = dir.listFiles();
-        if (files == null) {
-            return null;
-        }
-        for (File file : files) {
-            if (file.isDirectory()) {
-                fileList.add(file);
-                if (isAll) {
-                    List<File> innerFileList = getDirectoryList(file.getAbsolutePath(), true);
-                    if (innerFileList != null && !innerFileList.isEmpty()) {
-                        fileList.addAll(innerFileList);
-                    }
-                }
-            }
-        }
-        return fileList;
-    }
-
-    /**
      * 获取文件列表
      *
      * @param sourceFolderDirectory 源文件夹目录
@@ -267,7 +179,11 @@ public class FileUtils {
     public static String[] getFileNames(String sourceAbsolutePath) {
         String fileName = sourceAbsolutePath.substring(sourceAbsolutePath.lastIndexOf(File.separator) + 1);
         int i = fileName.lastIndexOf(".");
-        return new String[]{fileName, fileName.substring(0, i), fileName.substring(i)};
+        if (i != -1) {
+            return new String[]{fileName, fileName.substring(0, i), fileName.substring(i)};
+        } else {
+            return new String[]{fileName, fileName, ""};
+        }
     }
 
     /**
