@@ -55,6 +55,9 @@ public class Application {
     }
 
     private static void rename(String sourceFolderDirectory) {
+        if (sourceFolderDirectory == null || sourceFolderDirectory.isEmpty()) {
+            return;
+        }
         List<File> fileList = getFileList(sourceFolderDirectory);
         for (File file : fileList) {
             String dateTime = MetadataUtils.getDateTime(file, "yyyy_MM_dd_HH_mm_ss");
