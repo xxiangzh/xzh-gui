@@ -10,7 +10,7 @@ import java.awt.*;
 public class JFrameBuilder {
 
     public static void init(Component... components) {
-        init("", 400, 200, components);
+        init("", 400, 100, components);
     }
 
     public static void init(String title, int width, int height, Component... components) {
