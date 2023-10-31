@@ -45,9 +45,14 @@ public class Application {
 
                 String sourceFolderDirectory = textField1.getText();
 
-                rename(sourceFolderDirectory);
+                String msg = "已完成！";
+                try {
+                    rename(sourceFolderDirectory);
+                } catch (Exception e) {
+                    msg = e.getMessage();
+                }
 
-                JOptionPane.showMessageDialog(null, "已完成！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, msg, "提示", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
